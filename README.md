@@ -214,3 +214,7 @@ API key + model name daalo
 2_chatbot.py chalao → ek sawaal pucho
 Result/error batao
 Jo bhi issue aaye (parsing kam, API error), output paste karo — turant fix karenge! 💪
+
+python -c "open('new_act.txt',encoding='utf-8').read().upper().count('CHAPTER')"  
+
+python -c "import re; t=open('new_act.txt',encoding='utf-8').read(); print(re.findall(r'CHAPTER[\s\-]+[IVXLC0-9]+', t, re.I)[:10])"  
