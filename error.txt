@@ -1,0 +1,11 @@
+PS C:\temp\income_tax_bot> .\1_parse.py
+  File "C:\temp\income_tax_bot\1_parse.py", line 60
+    Chalao: python 1_parse.py
+                    ^
+SyntaxError: invalid decimal literal
+PS C:\temp\income_tax_bot> .\2_chatbot.py
+Traceback (most recent call last):
+  File "C:\temp\income_tax_bot\2_chatbot.py", line 13, in <module>
+    with open("sections.json", "r", encoding="utf-8") as f:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'sections.json'
