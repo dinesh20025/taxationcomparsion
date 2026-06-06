@@ -8,8 +8,6 @@ client = OpenAI(
     api_key="nvapi-XXXXXXXXXXXXXXXXX"          # ⚠️ apni key daalo  
 )  
 MODEL = "nvidia/nemotron-3-ultra-550b-a55b"  
-  
-# Thinking dikhana hai? True = soch bhi dikhegi, False = sirf answer  
 SHOW_THINKING = False  
   
 # ============ DATA LOAD ============  
@@ -23,23 +21,34 @@ except FileNotFoundError:
   
 STOP = {"the","a","an","is","are","of","in","on","for","to","what","how",  
         "kya","hai","hain","mein","ka","ki","ke","under","define","explain",  
-        "and","or","tell","me","about","please"}  
+        "and","or","tell","me","about","please","section","sec","s",  
+        "give","details","detail","meaning","information","info"}  
   
   
-# ============ SEARCH (keyword scoring) ============  
+# ============ SEARCH ============  
 def search(query, top_k=3):  
     q_words = set(re.findall(r'\w+', query.lower())) - STOP  
   
+    # Section number mention? jaise "section 17"  
     num_match = re.search(r'\b(\d+[A-Za-z]{0,3})\b', query)  
     target_num = num_match.group(1).upper() if num_match else None  
+    # number ko keyword list se hatao (warna har jagah match karega)  
+    if target_num:  
+        q_words.discard(target_num.lower())  
   
     scored = []  
     for sec in SECTIONS:  
         text_low = (sec["title"] + " " + sec["text"]).lower()  
-        score = sum(text_low.count(w) for w in q_words)  
+        title_low = sec["title"].lower()  
   
+        score = 0  
+        for w in q_words:  
+            score += text_low.count(w)  
+            score += title_low.count(w) * 3      # title match zyada important  
+  
+        # Exact section number -> bada boost  
         if target_num and sec["section"].upper() == target_num:  
-            score += 5000  
+            score += 10000  
   
         if score > 0:  
             scored.append((score, sec))  
@@ -48,19 +57,18 @@ def search(query, top_k=3):
     return [s for _, s in scored[:top_k]]  
   
   
-# ============ ASK NEMOTRON (RAG + Reasoning) ============  
+# ============ ASK NEMOTRON ============  
 def ask(question):  
     hits = search(question, top_k=3)  
   
     if not hits:  
-        print("\n⚠️  Search se koi section match nahi hua.")  
-        context = "No matching section found in the database."  
+        print("\n⚠️  Koi section match nahi hua.")  
+        context = "No matching section found."  
     else:  
         context = ""  
         for h in hits:  
-            snippet = h["text"][:2500]  
             context += (f"\n--- [{h['act']}] Section {h['section']}: "  
-                        f"{h['title']} ---\n{snippet}\n")  
+                        f"{h['title']} ---\n{h['text'][:2500]}\n")  
         print("\n🔎 Found:", ", ".join(  
             f"[{h['act']}] Sec {h['section']}" for h in hits))  
   
@@ -73,7 +81,6 @@ def ask(question):
     )  
     user_prompt = f"CONTEXT:\n{context}\n\nQUESTION: {question}"  
   
-    # ---- API call with REASONING ----  
     try:  
         completion = client.chat.completions.create(  
             model=MODEL,  
@@ -91,27 +98,25 @@ def ask(question):
             stream=True  
         )  
   
-        printed_thinking_header = False  
-        printed_answer_header = False  
+        printed_think = False  
+        printed_ans = False  
   
         for chunk in completion:  
             if not chunk.choices:  
                 continue  
             delta = chunk.choices[0].delta  
   
-            # --- Thinking part ---  
             reasoning = getattr(delta, "reasoning_content", None)  
             if reasoning and SHOW_THINKING:  
-                if not printed_thinking_header:  
+                if not printed_think:  
                     print("\n💭 Soch raha hai:\n", end="", flush=True)  
-                    printed_thinking_header = True  
+                    printed_think = True  
                 print(reasoning, end="", flush=True)  
   
-            # --- Answer part ---  
             if delta.content:  
-                if not printed_answer_header:  
+                if not printed_ans:  
                     print("\n\n🤖 Nemotron: ", end="", flush=True)  
-                    printed_answer_header = True  
+                    printed_ans = True  
                 print(delta.content, end="", flush=True)  
   
         print("\n")  
