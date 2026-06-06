@@ -7,8 +7,13 @@ client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",  
     api_key="nvapi-XXXXXXXXXXXXXXXXX"          # ⚠️ apni key daalo  
 )  
+  
 MODEL = "nvidia/nemotron-3-ultra-550b-a55b"  
-SHOW_THINKING = False  
+# 💡 Aur fast chahiye? Niche wala uncomment karo:  
+# MODEL = "meta/llama-3.1-70b-instruct"  
+  
+SHOW_THINKING = False        # thinking dikhana hai? (False = fast)  
+ENABLE_THINKING = False      # ⚡ FALSE = bahut fast | True = thoda smart par slow  
   
 # ============ DATA LOAD ============  
 try:  
@@ -22,17 +27,16 @@ except FileNotFoundError:
 STOP = {"the","a","an","is","are","of","in","on","for","to","what","how",  
         "kya","hai","hain","mein","ka","ki","ke","under","define","explain",  
         "and","or","tell","me","about","please","section","sec","s",  
-        "give","details","detail","meaning","information","info"}  
+        "give","details","detail","meaning","information","info","do",  
+        "can","i","claim","get","my","your"}  
   
   
 # ============ SEARCH ============  
-def search(query, top_k=3):  
+def search(query, top_k=2):  
     q_words = set(re.findall(r'\w+', query.lower())) - STOP  
   
-    # Section number mention? jaise "section 17"  
     num_match = re.search(r'\b(\d+[A-Za-z]{0,3})\b', query)  
     target_num = num_match.group(1).upper() if num_match else None  
-    # number ko keyword list se hatao (warna har jagah match karega)  
     if target_num:  
         q_words.discard(target_num.lower())  
   
@@ -44,9 +48,8 @@ def search(query, top_k=3):
         score = 0  
         for w in q_words:  
             score += text_low.count(w)  
-            score += title_low.count(w) * 3      # title match zyada important  
+            score += title_low.count(w) * 3     # title match important  
   
-        # Exact section number -> bada boost  
         if target_num and sec["section"].upper() == target_num:  
             score += 10000  
   
@@ -57,9 +60,9 @@ def search(query, top_k=3):
     return [s for _, s in scored[:top_k]]  
   
   
-# ============ ASK NEMOTRON ============  
+# ============ ASK MODEL ============  
 def ask(question):  
-    hits = search(question, top_k=3)  
+    hits = search(question, top_k=2)            # ⚡ 2 sections (fast)  
   
     if not hits:  
         print("\n⚠️  Koi section match nahi hua.")  
@@ -68,7 +71,7 @@ def ask(question):
         context = ""  
         for h in hits:  
             context += (f"\n--- [{h['act']}] Section {h['section']}: "  
-                        f"{h['title']} ---\n{h['text'][:2500]}\n")  
+                        f"{h['title']} ---\n{h['text'][:1200]}\n")   # ⚡ 1200 char  
         print("\n🔎 Found:", ", ".join(  
             f"[{h['act']}] Sec {h['section']}" for h in hits))  
   
@@ -77,7 +80,7 @@ def ask(question):
         "Answer ONLY using the provided sections below. "  
         "If the answer is not in the context, say 'Given sections mein ye info nahi mili.' "  
         "Always mention the Section number and which Act (New 2025 / Old 1961). "  
-        "Answer in simple, clear language."  
+        "Answer in simple, clear language. Be concise."  
     )  
     user_prompt = f"CONTEXT:\n{context}\n\nQUESTION: {question}"  
   
@@ -90,10 +93,9 @@ def ask(question):
             ],  
             temperature=0.2,  
             top_p=0.95,  
-            max_tokens=8192,  
+            max_tokens=1024,                                          # ⚡ chhota  
             extra_body={  
-                "chat_template_kwargs": {"enable_thinking": True},  
-                "reasoning_budget": 4096  
+                "chat_template_kwargs": {"enable_thinking": ENABLE_THINKING}  
             },  
             stream=True  
         )  
@@ -115,7 +117,7 @@ def ask(question):
   
             if delta.content:  
                 if not printed_ans:  
-                    print("\n\n🤖 Nemotron: ", end="", flush=True)  
+                    print("\n🤖 Answer: ", end="", flush=True)  
                     printed_ans = True  
                 print(delta.content, end="", flush=True)  
   
