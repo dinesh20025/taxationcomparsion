@@ -38,3 +38,6 @@ Get-Content .\1_parse.py -TotalCount 3
 import json
 import re
 from openai import OpenAI
+
+
+python -c "import json; d=json.load(open('sections.json',encoding='utf-8')); print([s['section'] for s in d if s['section']=='17'])"  
