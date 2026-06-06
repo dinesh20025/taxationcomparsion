@@ -9,3 +9,26 @@ Traceback (most recent call last):
     with open("sections.json", "r", encoding="utf-8") as f:
          ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 FileNotFoundError: [Errno 2] No such file or directory: 'sections.json'
+
+
+PS C:\temp\income_tax_bot> .\1_parse.py
+✅ Loaded 170 sections
+=======================================================
+💼 Income Tax Act Chatbot (New 2025 + Old 1961)
+Type 'quit' to exit
+=======================================================
+
+❓ Aapka sawaal: quit
+Bye! 👋
+PS C:\temp\income_tax_bot> .\2_chatbot.py
+==================================================
+💼 Income Tax Act Chatbot (New 2025 + Old 1961)
+Type 'quit' to exit
+==================================================
+
+❓ Aapka sawaal: section 17 prequisite
+
+🤖 Nemotron: Given sections mein ye info nahi mili. Provided context mein Section 17 (Perquisites) ka koi mention nahi hai. Sirf Sections 33B, 34, 31, 32, aur 80CC (Old Act 1961) diye gaye hain.
+❌ Error: list index out of range
+
+❓ Aapka sawaal:
