@@ -285,3 +285,7 @@ az webapp deploy \
   --src-path deploy.zip \  
   --type zip  
 
+az webapp config set \  
+  --resource-group rg-terraform-state \  
+  --name my-taxai-app \  
+  --startup-file "gunicorn -w 2 -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:8000"  
