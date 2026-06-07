@@ -119,6 +119,18 @@ def build_prompts(question):
         "the context. Never refuse to answer. ALWAYS respond in clear, "  
         "professional ENGLISH (never Hinglish). Use headings, bullets, and "  
         "tables. Always cite Section numbers and Act (New 2025 / Old 1961)."  
+        "\n\nIMPORTANT — VISUAL SUMMARY TABLE:\n"  
+        "AFTER your normal text answer, ALWAYS add ONE clean summary table "  
+        "wrapped in special tags exactly like this:\n"  
+        "[[TAXTABLE: <short title here>]]\n"  
+        "| Column1 | Column2 | Column3 |\n"  
+        "|---------|---------|---------|\n"  
+        "| data | data | data |\n"  
+        "[[/TAXTABLE]]\n"  
+        "For comparisons use columns: Aspect | Old Act 1961 | New Act 2025. "  
+        "For a single section use columns: Particulars | Details. "  
+        "Keep it concise (4-7 rows). This table is a VISUAL HIGHLIGHT "  
+        "summarising the key points. Never skip this table."  
     )  
   
     if mode == "chapter":  
@@ -148,11 +160,12 @@ def build_prompts(question):
             task = ("Answer clearly in English. Direct answer first, then "  
                     "details with headings/bullets. Add brief recommendation "  
                     "if user wants guidance.")  
-        max_tok = 1000  
+        max_tok = 1200  
   
     system_prompt = base_persona + "\n\nTASK:\n" + task  
     user_prompt = (f"CONTEXT:\n{context}\n\nQUESTION: {question}\n\n"  
-                   "(Respond in English only.)")  
+                   "(Respond in English only. Remember to add the "  
+                   "[[TAXTABLE]] visual summary at the end.)")  
     sources = [f"[{h['act']}] Sec {h['section']}" for h in hits[:6]]  
     return system_prompt, user_prompt, max_tok, sources  
   
@@ -175,4 +188,4 @@ def ask_stream(question):
             if d.content:  
                 yield d.content  
     except Exception as e:  
-        yield f"\n\n❌ Error: {e}"  
+        yield f"\n\n❌ Error: {e}"
