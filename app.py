@@ -23,4 +23,4 @@ def chat(q: Query):
 # health check (Azure ke liye)  
 @app.get("/health")  
 def health():  
-    return {"status": "ok", "sections": len(core.SECTIONS)}  
+    return {"status": "ok", "sections": len(core.SECTIONS)}
