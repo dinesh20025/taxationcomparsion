@@ -62,5 +62,31 @@ python -c "import json; d=json.load(open('sections.json',encoding='utf-8')); pri
 ❓ Sawaal: new income tax act mein kya hai
 🔎 Found: [New] Sec 67, [New] Sec 92, [Old] Sec 56
 
-❌ API Error: Error code: 400 - {'error': {'message': "reasoning_effort=low is not support by Mistral models. Only 'high' and 'none' are.", 'type': 'BadRequestError', 'param': None, 'code': 400}}
+❌ API Error: Error code: 400 - {'error': {'message': "reasoning_effort=low is not support by Mistral models. Only 'high' and 'none' are.", 'type': 'BadRequestError', 'param': None, 
+'code': 400}}
+
+
+az webapp config set \  
+  --resource-group rg-terraform-state \  
+  --name my-taxai-app \  
+  --startup-file "gunicorn -w 2 -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:8000"  
+
+az webapp config appsettings set \  
+  --resource-group rg-terraform-state \  
+  --name my-taxai-app \  
+  --settings NVIDIA_API_KEY="nvapi-YOUR-REAL-KEY" \  
+             SCM_DO_BUILD_DURING_DEPLOYMENT=true \  
+             WEBSITES_PORT=8000  
+
+# Pehle zip banao (Windows PowerShell)  
+Compress-Archive -Path * -DestinationPath deploy.zip -Force  
+  
+# Ya Linux/Mac  
+zip -r deploy.zip . -x "*.git*" "*.venv*" "__pycache__/*"  
+
+az webapp deploy \  
+  --resource-group rg-terraform-state \  
+  --name my-taxai-app \  
+  --src-path deploy.zip \  
+  --type zip  
 
