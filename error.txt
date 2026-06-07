@@ -44,3 +44,23 @@ python -c "import json; d=json.load(open('sections.json',encoding='utf-8')); pri
 
 python -c "import json; d=json.load(open('sections.json',encoding='utf-8')); print([s['section'] for s in d if s['section']=='17'])"
 ['17', '17']
+
+
+ python.exe 2_chatbot.py
+✅ Loaded 343 sections
+============================================================
+💼 Income Tax AI — Chapter + Section + Compare + Opinion 🧠
+   New Act 2025  vs  Old Act 1961
+   Examples:
+     • chapter 4 ke baare mein batao
+     • 80C aur 80CCD ke naye act mein changes
+     • new aur old act mein kaunsa better hai?
+     • section 17 explain karo
+   Type 'quit' to exit
+============================================================
+
+❓ Sawaal: new income tax act mein kya hai
+🔎 Found: [New] Sec 67, [New] Sec 92, [Old] Sec 56
+
+❌ API Error: Error code: 400 - {'error': {'message': "reasoning_effort=low is not support by Mistral models. Only 'high' and 'none' are.", 'type': 'BadRequestError', 'param': None, 'code': 400}}
+
