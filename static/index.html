@@ -9,17 +9,65 @@
   body {  
     font-family: -apple-system, "Segoe UI", Roboto, sans-serif;  
     background:#1a1a1a; color:#e8e8e8; height:100vh;  
-    display:flex; flex-direction:column;  
+    display:flex; overflow:hidden;  
   }  
+  
+  /* ===== SIDEBAR ===== */  
+  #sidebar {  
+    width:260px; background:#171717; border-right:1px solid #2d2d2d;  
+    display:flex; flex-direction:column; flex-shrink:0;  
+    transition:margin-left 0.25s;  
+  }  
+  #sidebar.hidden { margin-left:-260px; }  
+  .sb-top { padding:12px; }  
+  .new-chat {  
+    width:100%; padding:11px 14px; background:#c05621; border:none;  
+    color:#fff; border-radius:8px; cursor:pointer; font-size:14px;  
+    font-weight:600; display:flex; align-items:center; gap:8px;  
+    justify-content:center;  
+  }  
+  .new-chat:hover { background:#9c4419; }  
+  .sb-label {  
+    padding:14px 16px 6px; font-size:11px; color:#777;  
+    text-transform:uppercase; letter-spacing:0.5px;  
+  }  
+  .history { flex:1; overflow-y:auto; padding:0 8px; }  
+  .hist-item {  
+    padding:10px 12px; border-radius:8px; cursor:pointer; font-size:13px;  
+    color:#ccc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;  
+    margin-bottom:2px; display:flex; align-items:center; gap:8px;  
+    position:relative;  
+  }  
+  .hist-item:hover { background:#262626; }  
+  .hist-item.active { background:#2d2d2d; }  
+  .hist-item .del {  
+    margin-left:auto; opacity:0; color:#888; font-size:14px;  
+    padding:0 4px; flex-shrink:0;  
+  }  
+  .hist-item:hover .del { opacity:1; }  
+  .hist-item .del:hover { color:#e74c3c; }  
+  .sb-bottom {  
+    padding:12px; border-top:1px solid #2d2d2d; font-size:11px; color:#666;  
+    text-align:center;  
+  }  
+  
+  /* ===== MAIN ===== */  
+  #main { flex:1; display:flex; flex-direction:column; min-width:0; }  
   header {  
-    padding:16px 24px; border-bottom:1px solid #2d2d2d;  
-    display:flex; align-items:center; gap:10px; background:#212121;  
+    padding:14px 20px; border-bottom:1px solid #2d2d2d;  
+    display:flex; align-items:center; gap:12px; background:#212121;  
   }  
-  header h1 { font-size:18px; font-weight:600; }  
+  .toggle-btn {  
+    background:none; border:none; color:#aaa; cursor:pointer;  
+    font-size:20px; padding:4px 8px; border-radius:6px;  
+  }  
+  .toggle-btn:hover { background:#2d2d2d; }  
+  header h1 { font-size:17px; font-weight:600; }  
   header .badge {  
     font-size:11px; background:#3a3a3a; padding:3px 8px;  
     border-radius:10px; color:#aaa;  
   }  
+  
   #chat {  
     flex:1; overflow-y:auto; padding:24px;  
     display:flex; flex-direction:column; gap:24px;  
@@ -29,11 +77,11 @@
   .avatar {  
     width:30px; height:30px; border-radius:6px; flex-shrink:0;  
     display:flex; align-items:center; justify-content:center;  
-    font-size:15px; font-weight:700;  
+    font-size:14px; font-weight:700;  
   }  
   .user .avatar { background:#4a5568; }  
   .bot .avatar  { background:#c05621; }  
-  .content { flex:1; padding-top:3px; }  
+  .content { flex:1; padding-top:3px; min-width:0; }  
   .content h1,.content h2,.content h3 { margin:14px 0 8px; font-size:16px; }  
   .content p { margin:8px 0; }  
   .content ul,.content ol { margin:8px 0 8px 22px; }  
@@ -49,10 +97,7 @@
   .content code {  
     background:#2d2d2d; padding:2px 6px; border-radius:4px; font-size:13px;  
   }  
-  .sources {  
-    margin-top:10px; font-size:12px; color:#888;  
-    border-top:1px solid #2d2d2d; padding-top:8px;  
-  }  
+  
   footer {  
     padding:16px 24px; border-top:1px solid #2d2d2d; background:#212121;  
   }  
@@ -73,9 +118,8 @@
   }  
   #send:disabled { opacity:0.4; cursor:not-allowed; }  
   .hint { text-align:center; font-size:11px; color:#666; margin-top:8px; }  
-  .empty {  
-    text-align:center; color:#666; margin:auto; padding:40px;  
-  }  
+  
+  .empty { text-align:center; color:#666; margin:auto; padding:40px; }  
   .empty h2 { font-size:22px; margin-bottom:8px; color:#aaa; }  
   .chips { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:20px; }  
   .chip {  
@@ -85,40 +129,60 @@
   .chip:hover { border-color:#c05621; }  
   .cursor::after { content:"▋"; animation:blink 1s infinite; color:#c05621; }  
   @keyframes blink { 50% { opacity:0; } }  
+  
+  @media (max-width:768px) {  
+    #sidebar { position:absolute; z-index:10; height:100%; }  
+  }  
 </style>  
 </head>  
 <body>  
-  <header>  
-    <h1>💼 Income Tax AI</h1>  
-    <span class="badge">New 2025 · Old 1961</span>  
-  </header>  
   
-  <div id="chat">  
-    <div class="empty" id="empty">  
-      <h2>How can I help you today?</h2>  
-      <p>Ask about any section, chapter, or comparison.</p>  
-      <div class="chips">  
-        <div class="chip" onclick="quick('Explain section 80C')">Section 80C</div>  
-        <div class="chip" onclick="quick('Chapter 4 ke baare mein batao')">Chapter 4</div>  
-        <div class="chip" onclick="quick('New aur old act mein kaunsa better hai?')">Which Act is better?</div>  
-        <div class="chip" onclick="quick('What is HRA exemption?')">HRA</div>  
-      </div>  
+  <!-- ===== SIDEBAR ===== -->  
+  <div id="sidebar">  
+    <div class="sb-top">  
+      <button class="new-chat" onclick="newChat()">  
+        <span>＋</span> New Chat  
+      </button>  
     </div>  
+    <div class="sb-label">Recent Chats</div>  
+    <div class="history" id="history"></div>  
+    <div class="sb-bottom">💼 Income Tax AI · 2025</div>  
   </div>  
   
-  <footer>  
-    <div class="input-box">  
-      <textarea id="q" rows="1" placeholder="Ask anything about Income Tax..."></textarea>  
-      <button id="send" onclick="sendMsg()">➤</button>  
-    </div>  
-    <div class="hint">AI can make mistakes. Verify with official Act sections.</div>  
-  </footer>  
+  <!-- ===== MAIN ===== -->  
+  <div id="main">  
+    <header>  
+      <button class="toggle-btn" onclick="toggleSidebar()">☰</button>  
+      <h1>💼 Income Tax AI</h1>  
+      <span class="badge">New 2025 · Old 1961</span>  
+    </header>  
+  
+    <div id="chat"></div>  
+  
+    <footer>  
+      <div class="input-box">  
+        <textarea id="q" rows="1" placeholder="Ask anything about Income Tax..."></textarea>  
+        <button id="send" onclick="sendMsg()">➤</button>  
+      </div>  
+      <div class="hint">AI can make mistakes. Verify with official Act sections.</div>  
+    </footer>  
+  </div>  
   
 <script>  
 const chat = document.getElementById('chat');  
 const qBox = document.getElementById('q');  
 const sendBtn = document.getElementById('send');  
+const historyEl = document.getElementById('history');  
   
+let chats = JSON.parse(localStorage.getItem('taxai_chats') || '{}');  
+let currentId = null;  
+  
+// ===== Sidebar toggle =====  
+function toggleSidebar(){  
+  document.getElementById('sidebar').classList.toggle('hidden');  
+}  
+  
+// ===== Auto-grow textarea =====  
 qBox.addEventListener('input', () => {  
   qBox.style.height = 'auto';  
   qBox.style.height = Math.min(qBox.scrollHeight, 120) + 'px';  
@@ -129,10 +193,74 @@ qBox.addEventListener('keydown', e => {
   
 function quick(text){ qBox.value = text; sendMsg(); }  
   
-// Minimal markdown renderer  
+// ===== Welcome screen =====  
+function showWelcome(){  
+  chat.innerHTML = `  
+    <div class="empty">  
+      <h2>How can I help you today?</h2>  
+      <p>Ask about any section, chapter, or comparison.</p>  
+      <div class="chips">  
+        <div class="chip" onclick="quick('Explain section 80C')">Section 80C</div>  
+        <div class="chip" onclick="quick('Chapter 4 ke baare mein batao')">Chapter 4</div>  
+        <div class="chip" onclick="quick('New aur old act mein kaunsa better hai?')">Which Act is better?</div>  
+        <div class="chip" onclick="quick('What is HRA exemption?')">HRA</div>  
+      </div>  
+    </div>`;  
+}  
+  
+// ===== New chat =====  
+function newChat(){  
+  currentId = null;  
+  showWelcome();  
+  renderHistory();  
+  qBox.focus();  
+}  
+  
+// ===== Save current chat =====  
+function saveChat(){  
+  if(!currentId) return;  
+  localStorage.setItem('taxai_chats', JSON.stringify(chats));  
+  renderHistory();  
+}  
+  
+// ===== Render history sidebar =====  
+function renderHistory(){  
+  const ids = Object.keys(chats).sort((a,b)=>chats[b].time-chats[a].time);  
+  if(ids.length===0){  
+    historyEl.innerHTML = '<div style="padding:10px 12px;font-size:12px;color:#555;">No chats yet</div>';  
+    return;  
+  }  
+  historyEl.innerHTML = ids.map(id => `  
+    <div class="hist-item ${id===currentId?'active':''}" onclick="loadChat('${id}')">  
+      <span>💬</span>  
+      <span style="overflow:hidden;text-overflow:ellipsis;">${chats[id].title}</span>  
+      <span class="del" onclick="delChat(event,'${id}')">✕</span>  
+    </div>`).join('');  
+}  
+  
+// ===== Load a chat =====  
+function loadChat(id){  
+  currentId = id;  
+  chat.innerHTML = '';  
+  chats[id].messages.forEach(m => {  
+    const c = addMsg(m.role, m.role==='user'?m.text:'');  
+    if(m.role==='bot') c.innerHTML = md(m.text);  
+  });  
+  renderHistory();  
+}  
+  
+// ===== Delete a chat =====  
+function delChat(e, id){  
+  e.stopPropagation();  
+  delete chats[id];  
+  localStorage.setItem('taxai_chats', JSON.stringify(chats));  
+  if(id===currentId) newChat();  
+  else renderHistory();  
+}  
+  
+// ===== Markdown renderer =====  
 function md(t){  
   t = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');  
-  // tables  
   t = t.replace(/((?:\|.*\|\n?)+)/g, m => {  
     const rows = m.trim().split('\n').filter(r=>r.includes('|'));  
     if(rows.length<2) return m;  
@@ -157,23 +285,40 @@ function md(t){
   return '<p>'+t+'</p>';  
 }  
   
+// ===== Add message bubble =====  
 function addMsg(role, text){  
-  const empty = document.getElementById('empty');  
+  const empty = chat.querySelector('.empty');  
   if(empty) empty.remove();  
   const div = document.createElement('div');  
   div.className = 'msg ' + role;  
   div.innerHTML = `<div class="avatar">${role==='user'?'U':'AI'}</div>  
-                   <div class="content">${role==='user'?text:''}</div>`;  
+                   <div class="content">${role==='user'?escapeHtml(text):''}</div>`;  
   chat.appendChild(div);  
   chat.scrollTop = chat.scrollHeight;  
   return div.querySelector('.content');  
 }  
   
+function escapeHtml(t){  
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');  
+}  
+  
+// ===== Send message =====  
 async function sendMsg(){  
   const q = qBox.value.trim();  
   if(!q) return;  
   qBox.value=''; qBox.style.height='auto';  
   sendBtn.disabled = true;  
+  
+  // New chat? create entry  
+  if(!currentId){  
+    currentId = 'c' + Date.now();  
+    chats[currentId] = {  
+      title: q.slice(0,40),  
+      time: Date.now(),  
+      messages: []  
+    };  
+  }  
+  chats[currentId].messages.push({role:'user', text:q});  
   
   addMsg('user', q);  
   const out = addMsg('bot', '');  
@@ -196,13 +341,22 @@ async function sendMsg(){
       chat.scrollTop = chat.scrollHeight;  
     }  
   } catch(e){  
-    out.innerHTML = '❌ Error: ' + e.message;  
+    raw = '❌ Error: ' + e.message;  
+    out.innerHTML = raw;  
   }  
   out.classList.remove('cursor');  
   out.innerHTML = md(raw);  
+  
+  chats[currentId].messages.push({role:'bot', text:raw});  
+  saveChat();  
+  
   sendBtn.disabled = false;  
   qBox.focus();  
 }  
+  
+// ===== Init =====  
+showWelcome();  
+renderHistory();  
 </script>  
 </body>  
 </html>
