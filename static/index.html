@@ -87,6 +87,8 @@
   .content ul,.content ol { margin:8px 0 8px 22px; }  
   .content li { margin:4px 0; }  
   .content strong { color:#fff; }  
+  
+  /* ===== Normal tables ===== */  
   .content table {  
     border-collapse:collapse; margin:12px 0; width:100%; font-size:14px;  
   }  
@@ -97,6 +99,32 @@
   .content code {  
     background:#2d2d2d; padding:2px 6px; border-radius:4px; font-size:13px;  
   }  
+  
+  /* ===== FANCY HIGHLIGHT TABLE (image jaisa) ===== */  
+  .tax-card {  
+    margin:20px 0; border-radius:12px; overflow:hidden;  
+    box-shadow:0 4px 16px rgba(0,0,0,0.4); border:1px solid #3d3d3d;  
+  }  
+  .tax-card-header {  
+    background:linear-gradient(135deg,#e53e3e,#c05621);  
+    color:#fff; padding:14px 18px; font-size:15px; font-weight:700;  
+    text-align:center; letter-spacing:0.5px; text-transform:uppercase;  
+  }  
+  .tax-card table {  
+    border-collapse:collapse; width:100%; margin:0; font-size:13.5px;  
+  }  
+  .tax-card thead tr { background:#2a2a2a; }  
+  .tax-card th {  
+    background:#2a2a2a; color:#ff9a5c; font-weight:700;  
+    padding:11px 14px; text-align:left; border:1px solid #3d3d3d;  
+  }  
+  .tax-card td {  
+    border:1px solid #333; padding:10px 14px; vertical-align:top;  
+  }  
+  .tax-card tbody tr:nth-child(even) { background:#232323; }  
+  .tax-card tbody tr:nth-child(odd)  { background:#1c1c1c; }  
+  .tax-card tbody tr:hover { background:#2d2d2d; }  
+  .tax-card td strong { color:#ff9a5c; }  
   
   footer {  
     padding:16px 24px; border-top:1px solid #2d2d2d; background:#212121;  
@@ -261,6 +289,34 @@ function delChat(e, id){
 // ===== Markdown renderer =====  
 function md(t){  
   t = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');  
+  
+  // ===== Special TAXTABLE fancy card =====  
+  t = t.replace(/$\[TAXTABLE:\s*(.*?)$\]([\s\S]*?)$\[\/TAXTABLE$\]/g,  
+    (match, title, tableMd) => {  
+      const rows = tableMd.trim().split('\n').filter(r => r.includes('|'));  
+      if(rows.length < 2) return '';  
+      let tbl = '<table><thead>';  
+      let bodyOn = false;  
+      rows.forEach((r, i) => {  
+        if(/^\|[\s\-:|]+\|$/.test(r)) {  
+          tbl += '</thead><tbody>'; bodyOn = true; return;  
+        }  
+        const cells = r.split('|').slice(1, -1);  
+        const tag = (i === 0 && !bodyOn) ? 'th' : 'td';  
+        tbl += '<tr>' + cells.map(c => {  
+          let v = c.trim().replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');  
+          return `<${tag}>${v}</${tag}>`;  
+        }).join('') + '</tr>';  
+      });  
+      if(!bodyOn) tbl += '</thead>';  
+      tbl += '</tbody></table>';  
+      return `<div class="tax-card">  
+                <div class="tax-card-header">${title.trim()}</div>  
+                ${tbl}  
+              </div>`;  
+    });  
+  
+  // ===== Normal tables =====  
   t = t.replace(/((?:\|.*\|\n?)+)/g, m => {  
     const rows = m.trim().split('\n').filter(r=>r.includes('|'));  
     if(rows.length<2) return m;  
@@ -273,6 +329,7 @@ function md(t){
     });  
     return html+'</table>';  
   });  
+  
   t = t.replace(/^### (.*)$/gm,'<h3>$1</h3>')  
        .replace(/^## (.*)$/gm,'<h2>$1</h2>')  
        .replace(/^# (.*)$/gm,'<h1>$1</h1>')  
