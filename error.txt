@@ -40,6 +40,201 @@ import re
 from openai import OpenAI
 
 
+az webapp log tail --resource-group rg-terraform-state --name my-taxai-app
+2026-06-07T02:23:31  Welcome, you are now connected to log-streaming service.
+Starting Log Tail -n 10 of existing logs ----
+/home/LogFiles/StartupLogs/README.txt  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/StartupLogs/README.txt)
+
+File naming: {date}_{machine}_{success|failure}.log
+
+  date     ??? The date the startup occurred (yyyy_MM_dd)
+  machine  ??? The VM instance that ran the container
+  success  ??? The container started and passed health checks
+  failure  ??? The container failed to start or did not pass health checks
+
+To disable these logs, add this app setting:
+  WEBSITE_DISABLE_CONTAINER_STARTUP_LOGS = true
+/home/LogFiles/kudu/trace/4433aea60859-2c7199c4-34b9-484a-b2e4-cd96fcd9d541.txt  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/4433aea60859-2c7199c4-34b9-484a-b2e4-cd96fcd9d541.txt)
+2026-06-07T02:15:32    Outgoing response, type: response, statusCode: 409, statusText: Conflict
+/home/LogFiles/kudu/trace/4433aea60859-7ba45bc0-2090-4afc-9109-1db418ce1197.txt  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/4433aea60859-7ba45bc0-2090-4afc-9109-1db418ce1197.txt)
+2026-06-07T02:12:38  Startup Request, url: /api/deployments?warmup=true, method: GET, type: request, pid: 831,1,5, SCM_DO_BUILD_DURING_DEPLOYMENT: 1, ScmType: GitHubAction
+/home/LogFiles/kudu/trace/4433aea60859-e9d0fc9b-ed75-4ed1-afb7-262ce3f5484e.txt  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/4433aea60859-e9d0fc9b-ed75-4ed1-afb7-262ce3f5484e.txt)
+2026-06-07T02:15:43    Outgoing response, type: response, statusCode: 409, statusText: Conflict
+/home/LogFiles/kudu/trace/4433aea60859-f6799d33-fa25-49ab-b354-34b73133d212.txt  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/4433aea60859-f6799d33-fa25-49ab-b354-34b73133d212.txt)
+2026-06-07T02:15:35    Outgoing response, type: response, statusCode: 409, statusText: Conflict
+/home/LogFiles/kudu/trace/e0670c6657d0-02e7e8c6-a92b-4594-ab4b-8807f911b2c5.txt  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/e0670c6657d0-02e7e8c6-a92b-4594-ab4b-8807f911b2c5.txt)
+2026-06-07T02:10:54  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 830,1,14, ScmType: None
+/home/LogFiles/2026_06_07_10-30-0-140_containerStream.log  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/2026_06_07_10-30-0-140_containerStream.log)
+2026-06-07T02:18:24.8736724Z 169.254.129.1 - - [07/Jun/2026:02:18:24 +0000] "GET /favicon.ico HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:23:27.5352408Z [2026-06-07 02:23:27 +0000] [1886] [ERROR] Error handling request GET /
+2026-06-07T02:23:27.5352781Z Traceback (most recent call last):
+2026-06-07T02:23:27.5352830Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:23:27.5352866Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:23:27.5352902Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:23:27.5352932Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:23:27.5352961Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:23:27.5352991Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:23:27.5360580Z 169.254.129.1 - - [07/Jun/2026:02:23:27 +0000] "GET / HTTP/1.1" 500 0 "-" "-"
+/home/LogFiles/2026_06_07_10-30-0-140_docker.log  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/2026_06_07_10-30-0-140_docker.log)
+2026-06-07T02:16:55.9822236Z Site is running with patch version PYTHON 3.11.15
+2026-06-07T02:17:16.0958900Z State: Stopping, Action: StoppingSite, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 06/07/2026 02:16:03 (UTC), DetailsLevel: INFO
+2026-06-07T02:17:16.1340115Z State: Stopping, Action: StoppingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 06/07/2026 02:16:03 (UTC), DetailsLevel: INFO
+2026-06-07T02:17:16.1344109Z Container is terminating. Grace period: 5 seconds.
+2026-06-07T02:17:16.1691928Z Stop and delete container. Retry count = 0
+2026-06-07T02:17:16.1693805Z Stopping container: b99436899fdb_my-taxai-app.
+2026-06-07T02:17:21.2620232Z Deleting container: b99436899fdb_my-taxai-app. Retry count = 0
+2026-06-07T02:17:21.5280129Z Container spec TerminationMessagePolicy  path
+2026-06-07T02:17:21.5319096Z Container is terminated. Total time elapsed: 5395 ms.
+2026-06-07T02:17:21.5320487Z Site: my-taxai-app stopped.
+/home/LogFiles/2026_06_07_10-30-0-140_status.log  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/2026_06_07_10-30-0-140_status.log)
+2026-06-07T02:17:16.0958900Z State: Stopping, Action: StoppingSite, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 06/07/2026 02:16:03 (UTC), DetailsLevel: INFO
+2026-06-07T02:17:16.1340115Z State: Stopping, Action: StoppingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 06/07/2026 02:16:03 (UTC), DetailsLevel: INFO
+2026-06-07T02:17:16.1344109Z Container is terminating. Grace period: 5 seconds.
+2026-06-07T02:17:16.1691928Z Stop and delete container. Retry count = 0
+2026-06-07T02:17:16.1693805Z Stopping container: b99436899fdb_my-taxai-app.
+2026-06-07T02:17:21.2620232Z Deleting container: b99436899fdb_my-taxai-app. Retry count = 0
+2026-06-07T02:17:21.5280129Z Container spec TerminationMessagePolicy  path
+2026-06-07T02:17:21.5319096Z Container is terminated. Total time elapsed: 5395 ms.
+2026-06-07T02:17:21.5320487Z Site: my-taxai-app stopped.
+/home/LogFiles/AppServiceAppLogs_Feature_Installer/startup_3.log  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/AppServiceAppLogs_Feature_Installer/startup_3.log)
+2026-06-07 02:13:53,953  [MainThread] [DEBUG] : Initialized AppServiceAppLogging
+2026-06-07 02:13:55,892  [Thread-3 (] [DEBUG] : Waiting for the logs flag to be set
+2026-06-07 02:16:02,360  [MainThread] [DEBUG] : Initializating AppServiceAppLogging
+2026-06-07 02:16:02,361  [Thread-1 (] [DEBUG] : Did not find any previously bound socket
+2026-06-07 02:16:02,361  [MainThread] [DEBUG] : Initialized AppServiceAppLogging
+2026-06-07 02:16:02,617  [Thread-3 (] [DEBUG] : Waiting for the logs flag to be set
+2026-06-07 02:16:54,146  [MainThread] [DEBUG] : Initializating AppServiceAppLogging
+2026-06-07 02:16:54,161  [Thread-1 (] [DEBUG] : Did not find any previously bound socket
+2026-06-07 02:16:54,162  [MainThread] [DEBUG] : Initialized AppServiceAppLogging
+2026-06-07 02:16:55,606  [Thread-3 (] [DEBUG] : Waiting for the logs flag to be set
+/home/LogFiles/CodeProfiler/9be4b8_debug.log  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/CodeProfiler/9be4b8_debug.log)
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [INFO] Code Profiler Installer is starting up
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [INFO] Cleaning up any existing status file which indicated signal handlers initialized status
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [INFO] Attempting to delete the signal_handler status file for instance id 9be4b8e022d07610be288d9acbc9280ae50fd944942360603a31288ed1ee591e
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [INFO] successfully deleted the status file
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [DEBUG] APPSETTING_WEBSITE_ENABLE_DEFAULT_CODE_PROFILER : None
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [INFO] Attempting to install the default code profiler.
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [DEBUG] viztracer would save traces to /tmp/9be4b8_profiler_trace.json
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [INFO] Successfully installed code profiler.
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [INFO] Signal Handlers SIGUSR for needed code-profiler have been initialized for gunicorn process on instance 9be4b8e022d07610be288d9acbc9280ae50fd944942360603a31288ed1ee591e
+[2026_06_07_02_16_55] [appsvc_profiler.installer] [DEBUG] Code Profiler Installer is exiting as installation is completed
+/home/LogFiles/StartupLogs/2026_06_07_10-30-0-140_success.log  (https://my-taxai-app.scm.azurewebsites.net/api/vfs/LogFiles/StartupLogs/2026_06_07_10-30-0-140_success.log)
+2026-06-07T02:16:55.7488263+00:00 ContainerStream:     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:16:55.7488300+00:00 ContainerStream:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:16:55.7488341+00:00 ContainerStream: TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:16:55.7494111+00:00 ContainerStream: 169.254.129.1 - - [07/Jun/2026:02:16:55 +0000] "GET /robots933456.txt HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:16:55.7509948+00:00 ContainerStatus: Site startup probe succeeded after 11.161071 seconds.
+2026-06-07T02:16:55.8181605+00:00 ContainerStatus: State: Starting, Action: WarmUpProbeSucceeded, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site startup probe succeeded after 11.161071 seconds., DetailsLevel: INFO
+2026-06-07T02:16:55.9753487+00:00 ContainerStatus: Site is running with deployment version: add31bd4-66e3-4479-bbcd-383086d4521d
+2026-06-07T02:16:55.9756466+00:00 ContainerStatus: Site started.
+2026-06-07T02:16:55.9757401+00:00 ContainerStatus: State: Started, Action: None, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 06/07/2026 02:16:55 (UTC), DetailsLevel: INFO
+2026-06-07T02:16:55.9822236+00:00 ContainerStatus: Site is running with patch version PYTHON 3.11.15
+Ending Log Tail of existing logs ---
+Starting Live Log Stream ---
+2026-06-07T02:18:10.5181595Z 169.254.129.1 - - [07/Jun/2026:02:18:10 +0000] "GET / HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:18:10.5220562Z [2026-06-07 02:18:10 +0000] [1886] [ERROR] Error handling request GET /
+2026-06-07T02:18:10.5220673Z Traceback (most recent call last):
+2026-06-07T02:18:10.5220703Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:18:10.5220724Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:10.5220747Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:10.5220767Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:10.5220787Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:10.5220808Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:10.5622906Z [2026-06-07 02:18:10 +0000] [1886] [ERROR] Error handling request GET /favicon.ico
+2026-06-07T02:18:10.5623308Z Traceback (most recent call last):
+2026-06-07T02:18:10.5623393Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:18:10.5623426Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:10.5623459Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:10.5623488Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:10.5623517Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:10.5623549Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:10.5643018Z 169.254.129.1 - - [07/Jun/2026:02:18:10 +0000] "GET /favicon.ico HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:18:11.4977621Z [2026-06-07 02:18:11 +0000] [1886] [ERROR] Error handling request GET /
+2026-06-07T02:18:11.4978008Z Traceback (most recent call last):
+2026-06-07T02:18:11.4978052Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:18:11.4978085Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:11.4978168Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:11.4978202Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:11.4978233Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:11.4978261Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:11.5002486Z 169.254.129.1 - - [07/Jun/2026:02:18:11 +0000] "GET / HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:18:11.5393718Z 169.254.129.1 - - [07/Jun/2026:02:18:11 +0000] "GET /favicon.ico HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:18:11.5399400Z [2026-06-07 02:18:11 +0000] [1886] [ERROR] Error handling request GET /favicon.ico
+2026-06-07T02:18:11.5399554Z Traceback (most recent call last):
+2026-06-07T02:18:11.5399592Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:18:11.5399621Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:11.5399651Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:11.5399677Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:11.5399728Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:11.5399756Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:12.2808206Z 169.254.129.1 - - [07/Jun/2026:02:18:12 +0000] "GET / HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:18:12.2808206Z [2026-06-07 02:18:12 +0000] [1886] [ERROR] Error handling request GET /
+2026-06-07T02:18:12.2808444Z Traceback (most recent call last):
+2026-06-07T02:18:12.2808478Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn
+/workers/sync.py", line 141, in handle
+2026-06-07T02:18:12.2808505Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:12.2808535Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:12.2808560Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:12.2808588Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:12.2808616Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:12.3195799Z [2026-06-07 02:18:12 +0000] [1886] [ERROR] Error handling request GET /favicon.ico
+2026-06-07T02:18:12.3196113Z Traceback (most recent call last):
+2026-06-07T02:18:12.3196149Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:18:12.3196180Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:12.3196213Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:12.3196245Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:12.3196277Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:12.3196307Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:12.3197603Z 169.254.129.1 - - [07/Jun/2026:02:18:12 +0000] "GET /favicon.ico HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:18:13.2786317Z 169.254.129.1 - - [07/Jun/2026:02:18:13 +0000] "GET / HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:18:13.2787230Z [2026-06-07 02:18:13 +0000] [1886] [ERROR] Error handling request GET /
+2026-06-07T02:18:13.2787294Z Traceback (most recent call last):
+2026-06-07T02:18:13.2787377Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:18:13.2787408Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:13.2787439Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:13.2787469Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:13.2787493Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:13.2787520Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:13.3182069Z [2026-06-07 02:18:13 +0000] [1886] [ERROR] Error handling request GET /favicon.ico
+2026-06-07T02:18:13.3182400Z Traceback (most recent call last):
+2026-06-07T02:18:13.3182447Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:18:13.3182480Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:13.3182551Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:13.3182580Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:13.3182609Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:13.3182637Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:13.3190989Z 169.254.129.1 - - [07/Jun/2026:02:18:13 +0000] "GET /favicon.ico HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:18:24.8117538Z [2026-06-07 02:18:24 +0000] [1886] [ERROR] Error handling request GET /
+2026-06-07T02:18:24.8118062Z Traceback (most recent call last):
+2026-06-07T02:18:24.8118105Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:18:24.8118135Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:24.8118165Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:24.8118193Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:24.8118265Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:24.8118293Z TypeError: F
+astAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:24.8129347Z 169.254.129.1 - - [07/Jun/2026:02:18:24 +0000] "GET / HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:18:24.8733420Z [2026-06-07 02:18:24 +0000] [1886] [ERROR] Error handling request GET /favicon.ico
+2026-06-07T02:18:24.8733814Z Traceback (most recent call last):
+2026-06-07T02:18:24.8733858Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:18:24.8733889Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:18:24.8733925Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:18:24.8733952Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:18:24.8733981Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:18:24.8734013Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:18:24.8736724Z 169.254.129.1 - - [07/Jun/2026:02:18:24 +0000] "GET /favicon.ico HTTP/1.1" 500 0 "-" "-"
+2026-06-07T02:23:27.5352408Z [2026-06-07 02:23:27 +0000] [1886] [ERROR] Error handling request GET /
+2026-06-07T02:23:27.5352781Z Traceback (most recent call last):
+2026-06-07T02:23:27.5352830Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 141, in handle
+2026-06-07T02:23:27.5352866Z     self.handle_request(listener, req, client, addr)
+2026-06-07T02:23:27.5352902Z   File "/tmp/8dec43abaa558c6/antenv/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 184, in handle_request
+2026-06-07T02:23:27.5352932Z     respiter = self.wsgi(environ, resp.start_response)
+2026-06-07T02:23:27.5352961Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-07T02:23:27.5352991Z TypeError: FastAPI.__call__() missing 1 required positional argument: 'send'
+2026-06-07T02:23:27.5360580Z 169.254.129.1 - - [07/Jun/2026:02:23:27 +0000] "GET / HTTP/1.1" 500 0 "-" "-"
+
+
+
 python -c "import json; d=json.load(open('sections.json',encoding='utf-8')); print([s['section'] for s in d if s['section']=='17'])"  
 
 python -c "import json; d=json.load(open('sections.json',encoding='utf-8')); print([s['section'] for s in d if s['section']=='17'])"
