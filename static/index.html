@@ -158,12 +158,42 @@
   .cursor::after { content:"▋"; animation:blink 1s infinite; color:#c05621; }  
   @keyframes blink { 50% { opacity:0; } }  
   
-  @media (max-width:768px) {  
-    #sidebar { position:absolute; z-index:10; height:100%; }  
+  /* ===== Overlay (mobile pe sidebar ke peeche dark bg) ===== */  
+  #overlay {  
+    display: none;  
+    position: fixed;  
+    inset: 0;  
+    background: rgba(0,0,0,0.5);  
+    z-index: 9;  
+  }  
+  #overlay.show { display: block; }  
+  
+  /* ===== MOBILE FIX ===== */  
+  @media (max-width: 768px) {  
+    /* Mobile pe sidebar default HIDDEN rahe */  
+    #sidebar {  
+      position: fixed;  
+      top: 0; left: 0;  
+      z-index: 20;  
+      height: 100%;  
+      margin-left: -260px;   /* by default chhupa rahe */  
+    }  
+    /* .open class lagne pe hi dikhe */  
+    #sidebar.open { margin-left: 0; }  
+    #sidebar.hidden { margin-left: -260px; }  
+  
+    #main { width: 100%; }  
+    #chat, .input-box { max-width: 100%; }  
+  
+    header h1 { font-size: 15px; }  
+    .badge { display: none; }  
   }  
 </style>  
 </head>  
 <body>  
+  
+  <!-- Mobile overlay -->  
+  <div id="overlay" onclick="toggleSidebar()"></div>  
   
   <!-- ===== SIDEBAR ===== -->  
   <div id="sidebar">  
@@ -205,9 +235,27 @@ const historyEl = document.getElementById('history');
 let chats = JSON.parse(localStorage.getItem('taxai_chats') || '{}');  
 let currentId = null;  
   
-// ===== Sidebar toggle =====  
+// ===== Sidebar toggle (mobile + desktop dono) =====  
 function toggleSidebar(){  
-  document.getElementById('sidebar').classList.toggle('hidden');  
+  const sb = document.getElementById('sidebar');  
+  const ov = document.getElementById('overlay');  
+  
+  if (window.innerWidth <= 768) {  
+    // Mobile: slide-in + overlay  
+    sb.classList.toggle('open');  
+    ov.classList.toggle('show');  
+  } else {  
+    // Desktop: purana behaviour  
+    sb.classList.toggle('hidden');  
+  }  
+}  
+  
+// Chat load/new hone par mobile pe sidebar auto-close  
+function closeSidebarMobile(){  
+  if (window.innerWidth <= 768) {  
+    document.getElementById('sidebar').classList.remove('open');  
+    document.getElementById('overlay').classList.remove('show');  
+  }  
 }  
   
 // ===== Auto-grow textarea =====  
@@ -241,6 +289,7 @@ function newChat(){
   currentId = null;  
   showWelcome();  
   renderHistory();  
+  closeSidebarMobile();  
   qBox.focus();  
 }  
   
@@ -269,6 +318,7 @@ function renderHistory(){
 // ===== Load a chat =====  
 function loadChat(id){  
   currentId = id;  
+  closeSidebarMobile();  
   chat.innerHTML = '';  
   chats[id].messages.forEach(m => {  
     const c = addMsg(m.role, m.role==='user'?m.text:'');  
@@ -291,7 +341,7 @@ function md(t){
   t = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');  
   
   // ===== Special TAXTABLE fancy card =====  
-  t = t.replace(/$\[TAXTABLE:\s*(.*?)$\]([\s\S]*?)$\[\/TAXTABLE$\]/g,  
+  t = t.replace(/$TAXTABLE:\s*(.*?)$([\s\S]*?)$\/TAXTABLE$/g,  
     (match, title, tableMd) => {  
       const rows = tableMd.trim().split('\n').filter(r => r.includes('|'));  
       if(rows.length < 2) return '';  
