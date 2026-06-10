@@ -7,7 +7,7 @@ client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",  
     api_key=os.environ.get("NVIDIA_API_KEY", "nvapi-XXXXX")  # ⚠️ env var  
 )  
-MODEL = "mistralai/mistral-small-4-119b-2603"  
+MODEL = "deepseek-ai/deepseek-v4-flash"  
   
 with open("sections.json", "r", encoding="utf-8") as f:  
     SECTIONS = json.load(f)  
@@ -191,8 +191,16 @@ def ask_stream(question):
                 {"role": "system", "content": system_prompt},  
                 {"role": "user", "content": user_prompt}  
             ],  
-            temperature=0.3, top_p=1.0, max_tokens=max_tok, stream=True,  
-            extra_body={"reasoning_effort": "none"}  
+            temperature=0.3,  
+            top_p=0.95,  
+            max_tokens=max_tok,                              # 800-1300 (lean)  
+            stream=True,  
+            extra_body={  
+                "chat_template_kwargs": {  
+                    "thinking": False,                       # 🔑 OFF = tez  
+                    "reasoning_effort": "none"               # 🔑 none = tez  
+                }  
+            }  
         )  
         for chunk in completion:  
             if not chunk.choices:  
