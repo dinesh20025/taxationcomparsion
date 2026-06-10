@@ -7,7 +7,7 @@ client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",  
     api_key=os.environ.get("NVIDIA_API_KEY", "nvapi-XXXXX")  # ⚠️ env var  
 )  
-MODEL = "deepseek-ai/deepseek-v4-flash"  
+MODEL = "meta/llama-3.1-8b-instruct"  
   
 with open("sections.json", "r", encoding="utf-8") as f:  
     SECTIONS = json.load(f)  
