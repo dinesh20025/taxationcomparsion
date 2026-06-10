@@ -27,17 +27,21 @@ ROMAN = {'i':'1','ii':'2','iii':'3','iv':'4','v':'5','vi':'6','vii':'7',
          'xiv':'14','xv':'15','xvi':'16','xvii':'17','xviii':'18',  
          'xix':'19','xx':'20'}  
   
+  
 def detect_chapter(query):  
     m = re.search(r'chapter[\s\-]+([ivxlc]+|\d+)', query, re.IGNORECASE)  
-    if not m: return None  
+    if not m:  
+        return None  
     raw = m.group(1).lower()  
     return ROMAN.get(raw, raw)  
+  
   
 def is_comparison(query):  
     keys = ["compare","comparison","difference","vs","versus","change",  
             "changes","badlaav","antar","farak","old and new","new and old",  
             "purane","naye","dono act"]  
     return any(k in query.lower() for k in keys)  
+  
   
 def is_opinion(query):  
     keys = ["which is better","kaunsa sahi","kaunsa better","kaunsa achha",  
@@ -46,18 +50,22 @@ def is_opinion(query):
             "konsa","beneficial","faydemand","kya choose","choose karu"]  
     return any(k in query.lower() for k in keys)  
   
+  
 def get_chapter_sections(chap_num):  
     return [s for s in SECTIONS if s.get("chapter") == chap_num]  
+  
   
 def get_section(sec_num):  
     sec_num = sec_num.upper()  
     return [s for s in SECTIONS if s["section"].upper() == sec_num]  
   
+  
 def smart_search(query):  
     chap = detect_chapter(query)  
     if chap:  
         hits = get_chapter_sections(chap)  
-        if hits: return hits, "chapter", chap  
+        if hits:  
+            return hits, "chapter", chap  
   
     nums = re.findall(r'\b(\d+[A-Za-z]{0,4})\b', query)  
     nums = [n.upper() for n in nums if not n.isdigit() or len(n) <= 4]  
@@ -82,8 +90,10 @@ def smart_search(query):
     for h in hits:  
         k = (h["act"], h["section"])  
         if k not in seen:  
-            seen.add(k); unique.append(h)  
+            seen.add(k)  
+            unique.append(h)  
     return unique[:6], "normal", None  
+  
   
 def build_prompts(question):  
     hits, mode, chap = smart_search(question)  
@@ -98,11 +108,12 @@ def build_prompts(question):
         for sec in SECTIONS:  
             text_low = (sec["title"] + " " + sec["text"]).lower()  
             score = sum(text_low.count(w) for w in q_words)  
-            if score > 0: scored.append((score, sec))  
+            if score > 0:  
+                scored.append((score, sec))  
         scored.sort(key=lambda x: x[0], reverse=True)  
         hits = [s for _, s in scored[:3]]  
   
-    per_sec = 600 if mode == "chapter" else 1200  
+    per_sec = 600 if mode == "chapter" else 1000     # 1200 -> 1000 (thoda lean)  
     context = ""  
     for h in hits:  
         ct = f" (Chapter {h.get('chapter','?')})" if h.get('chapter') else ""  
@@ -137,19 +148,19 @@ def build_prompts(question):
         task = (f"User asks about CHAPTER {chap}. Give overview:\n"  
                 "1. **Chapter Overview**\n2. **Important Sections** (1-2 lines each)\n"  
                 "3. **Key Takeaways** (bullets). Make it scannable.")  
-        max_tok = 1800  
+        max_tok = 1200                               # 1800 -> 1200  
     elif opinion:  
         task = ("User wants your PROFESSIONAL OPINION/RECOMMENDATION:\n"  
                 "1. **Quick Answer** (clear recommendation)\n2. **Reasoning** (pros/cons)\n"  
                 "3. **Comparison Table**\n4. **My Recommendation** (for whom)\n"  
                 "5. **Note** (depends on circumstances). Be decisive.")  
-        max_tok = 1800  
+        max_tok = 1200                               # 1800 -> 1200  
     elif compare:  
         task = ("User wants COMPARISON Old(1961) vs New(2025):\n"  
                 "1. **Purpose**\n2. **Old Act 1961**\n3. **New Act 2025**\n"  
                 "4. **Key Changes**\n5. **Comparison Table**\n"  
                 "6. **Which is More Beneficial** (your opinion).")  
-        max_tok = 1800  
+        max_tok = 1300                               # 1800 -> 1300  
     else:  
         if no_context:  
             task = ("No exact section found. Answer helpfully using any "  
@@ -160,7 +171,7 @@ def build_prompts(question):
             task = ("Answer clearly in English. Direct answer first, then "  
                     "details with headings/bullets. Add brief recommendation "  
                     "if user wants guidance.")  
-        max_tok = 1200  
+        max_tok = 900                                # 1200 -> 900  
   
     system_prompt = base_persona + "\n\nTASK:\n" + task  
     user_prompt = (f"CONTEXT:\n{context}\n\nQUESTION: {question}\n\n"  
@@ -168,6 +179,7 @@ def build_prompts(question):
                    "[[TAXTABLE]] visual summary at the end.)")  
     sources = [f"[{h['act']}] Sec {h['section']}" for h in hits[:6]]  
     return system_prompt, user_prompt, max_tok, sources  
+  
   
 def ask_stream(question):  
     """Generator — har chunk yield karta hai (streaming ke liye)"""  
@@ -183,7 +195,8 @@ def ask_stream(question):
             extra_body={"reasoning_effort": "none"}  
         )  
         for chunk in completion:  
-            if not chunk.choices: continue  
+            if not chunk.choices:  
+                continue  
             d = chunk.choices[0].delta  
             if d.content:  
                 yield d.content  
